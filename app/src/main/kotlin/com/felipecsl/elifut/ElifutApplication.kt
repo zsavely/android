@@ -4,7 +4,7 @@ import android.support.multidex.MultiDexApplication
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
 
-public open class ElifutApplication : MultiDexApplication() {
+open class ElifutApplication : MultiDexApplication() {
   var component: ElifutComponent? = null
 
   override fun onCreate() {

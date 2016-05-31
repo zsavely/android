@@ -137,9 +137,9 @@ class MatchProgressActivity : ElifutActivity() {
       imgView = imgTeamAway
       txtView = txtTeamAway
     }
-    Picasso.with(this@MatchProgressActivity).load(club.large_image()).into(imgView)
+    Picasso.with(this).load(club.large_image()).into(imgView)
 
-    txtView.text = club.tinyName().toUpperCase()
+    txtView.text = club.abbrev_name()
   }
 
   private fun stopTimer() {

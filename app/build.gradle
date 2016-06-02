@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'android-apt'
 apply plugin: 'com.getkeepsafe.dexcount'
 apply plugin: 'me.tatarka.retrolambda'
 apply plugin: 'com.github.ben-manes.versions'
@@ -31,10 +32,6 @@ android {
   }
   sourceSets {
     main.java.srcDirs += 'src/main/kotlin'
-    test.java.srcDirs += 'src/test/kotlin'
-  }
-  lintOptions {
-    disable 'MissingRegistered'
   }
   signingConfigs {
     release {
@@ -93,6 +90,7 @@ android {
 }
 
 dependencies {
+  retrolambdaConfig 'net.orfjackal.retrolambda:retrolambda:2.3.0'
   compile "com.android.support:design:$supportLibVersion"
   compile "com.android.support:appcompat-v7:$supportLibVersion"
   compile "com.android.support:cardview-v7:$supportLibVersion"
@@ -132,15 +130,15 @@ dependencies {
   provided 'com.gabrielittner.auto.value:auto-value-cursor-annotations:0.4.0'
   provided 'com.jakewharton.auto.value:auto-value-annotations:1.2-update1'
 
-  kapt 'com.google.auto.value:auto-value:1.2'
-  kapt 'com.squareup:javapoet:1.7.0'
-  kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-  kapt 'com.ryanharter.auto.value:auto-value-parcel:0.2.2'
-  kapt 'com.ryanharter.auto.value:auto-value-moshi:0.3.2'
-  kapt 'com.gabrielittner.auto.value:auto-value-cursor:0.4.0'
-  kapt "com.jakewharton:butterknife-compiler:$butterknifeVersion"
-  kapt "com.google.dagger:dagger-compiler:$daggerVersion"
-  kapt "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+  apt 'com.google.auto.value:auto-value:1.2'
+  apt 'com.squareup:javapoet:1.7.0'
+  apt "com.google.dagger:dagger-compiler:$daggerVersion"
+  apt 'com.ryanharter.auto.value:auto-value-parcel:0.2.2'
+  apt 'com.ryanharter.auto.value:auto-value-moshi:0.3.2'
+  apt 'com.gabrielittner.auto.value:auto-value-cursor:0.4.0'
+  apt "com.jakewharton:butterknife-compiler:$butterknifeVersion"
+  apt "com.google.dagger:dagger-compiler:$daggerVersion"
+  apt "com.jakewharton:butterknife-compiler:$butterknifeVersion"
 
   testCompile 'junit:junit:4.12'
   testCompile 'org.mockito:mockito-core:1.10.19'
@@ -166,8 +164,4 @@ dependencies {
     exclude module: 'wagon-http-lightweight'
     exclude module: 'wagon-provider-api'
   }
-}
-
-kapt {
-  generateStubs = true
 }

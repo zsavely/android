@@ -233,7 +233,7 @@ public abstract class NavigationActivity extends ElifutActivity
   }
 
   private void startMatchProgressActivity(LeagueRound round) {
-    startActivity(MatchProgressActivity.Companion.newIntent(NavigationActivity.this, round));
+    startActivity(MatchProgressActivity.newIntent(NavigationActivity.this, round));
     circularRevealOverlay.postDelayed(() -> circularRevealOverlay.setVisibility(View.GONE), 1000);
     Util.defer(() -> roundExecutor.execute(round.matches()));
   }

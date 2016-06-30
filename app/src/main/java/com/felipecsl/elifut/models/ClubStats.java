@@ -84,14 +84,16 @@ public abstract class ClubStats implements Parcelable {
     return 0;
   }
 
-  public static class Adapter implements ColumnTypeAdapter<ClubStats> {
+  static class Adapter implements ColumnTypeAdapter<ClubStats> {
     @Override public ClubStats fromCursor(Cursor cursor, String columnName) {
       return ClubStats.create(cursor);
     }
 
     @Override
     public void toContentValues(ContentValues values, String columnName, ClubStats value) {
-      values.putAll(value.toContentValues());
+      if (value != null) {
+        values.putAll(value.toContentValues());
+      }
     }
   }
 }

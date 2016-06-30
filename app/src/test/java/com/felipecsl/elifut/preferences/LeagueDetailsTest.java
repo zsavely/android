@@ -57,12 +57,41 @@ public class LeagueDetailsTest {
       Match.create(TestFixtures.INTERNACIONAL, TestFixtures.GREMIO, matchResult),
       Match.create(TestFixtures.GREMIO, TestFixtures.INTERNACIONAL, matchResult)));
   private final List<LeagueRound> rounds = Arrays.asList(round1, round2);
+  private final Club gremioWithWin = TestFixtures.GREMIO.toBuilder()
+      .stats(TestFixtures.GREMIO.nonNullStats()
+          .newWithWin()
+          .toBuilder()
+          .goals(2)
+          .build())
+      .build();
+  private final Club flamengoWithWin = TestFixtures.FLAMENGO.toBuilder()
+      .stats(TestFixtures.FLAMENGO.nonNullStats()
+          .newWithWin()
+          .toBuilder()
+          .goals(1)
+          .build())
+      .build();
+  private final Club internacionalWithLoss = TestFixtures.INTERNACIONAL.toBuilder()
+      .stats(TestFixtures.INTERNACIONAL.nonNullStats()
+          .newWithLoss()
+          .toBuilder()
+          .goals(-2)
+          .build())
+      .build();
+  private final Club fluminenseWithLoss = TestFixtures.FLUMINENSE.toBuilder()
+      .stats(TestFixtures.FLUMINENSE.nonNullStats()
+          .newWithLoss()
+          .toBuilder()
+          .goals(-1)
+          .build())
+      .build();
   private LeagueDetails leagueDetails;
 
   @Inject ElifutDataStore persistenceService;
   @Inject MatchResultGenerator matchResultGenerator;
   @Mock ClubDataStore clubDataStore;
   @Mock LeagueRoundGenerator roundGenerator;
+  @Mock ElifutDataStore mockPersistenceStore;
 
   @Before public void setUp() throws Exception {
     TestElifutApplication application = (TestElifutApplication) RuntimeEnvironment.application;
@@ -117,5 +146,36 @@ public class LeagueDetailsTest {
 
     verify(mockResultGenerator).generate(gremio, homeSquad, internacional, awaySquad);
     assertThat(leagueRound.matches().get(0).result()).isEqualTo(fakeResult);
+  }
+
+  @Test public void clubsStandings() {
+    when(mockPersistenceStore.query(AutoValueClasses.CLUB)).thenReturn(
+        Arrays.asList(gremioWithWin, internacionalWithLoss, flamengoWithWin, fluminenseWithLoss));
+
+    LeagueDetails leagueDetails = new LeagueDetails(mockPersistenceStore, clubDataStore,
+        roundGenerator, matchResultGenerator);
+
+    List<? extends Club> standings = leagueDetails.clubsStandings();
+
+    // Expected standings:
+    // Gremio - 3 pts, 2 goals
+    // Flamengo - 3 pts, 1 goal
+    // Fluminense - 0 pts, -1 goals
+    // Internacional - 0 pts, -2 goals
+    assertThat(standings).isEqualTo(Arrays.asList(
+        gremioWithWin, flamengoWithWin, fluminenseWithLoss, internacionalWithLoss));
+  }
+
+  @Test public void clubPosition() {
+    when(mockPersistenceStore.query(AutoValueClasses.CLUB)).thenReturn(
+        Arrays.asList(gremioWithWin, internacionalWithLoss, flamengoWithWin, fluminenseWithLoss));
+
+    LeagueDetails leagueDetails = new LeagueDetails(mockPersistenceStore, clubDataStore,
+        roundGenerator, matchResultGenerator);
+
+    assertThat(leagueDetails.clubPosition(gremioWithWin)).isEqualTo(0);
+    assertThat(leagueDetails.clubPosition(flamengoWithWin)).isEqualTo(1);
+    assertThat(leagueDetails.clubPosition(fluminenseWithLoss)).isEqualTo(2);
+    assertThat(leagueDetails.clubPosition(internacionalWithLoss)).isEqualTo(3);
   }
 }

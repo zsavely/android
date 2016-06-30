@@ -57,34 +57,10 @@ public class LeagueDetailsTest {
       Match.create(TestFixtures.INTERNACIONAL, TestFixtures.GREMIO, matchResult),
       Match.create(TestFixtures.GREMIO, TestFixtures.INTERNACIONAL, matchResult)));
   private final List<LeagueRound> rounds = Arrays.asList(round1, round2);
-  private final Club gremioWithWin = TestFixtures.GREMIO.toBuilder()
-      .stats(TestFixtures.GREMIO.nonNullStats()
-          .newWithWin()
-          .toBuilder()
-          .goals(2)
-          .build())
-      .build();
-  private final Club flamengoWithWin = TestFixtures.FLAMENGO.toBuilder()
-      .stats(TestFixtures.FLAMENGO.nonNullStats()
-          .newWithWin()
-          .toBuilder()
-          .goals(1)
-          .build())
-      .build();
-  private final Club internacionalWithLoss = TestFixtures.INTERNACIONAL.toBuilder()
-      .stats(TestFixtures.INTERNACIONAL.nonNullStats()
-          .newWithLoss()
-          .toBuilder()
-          .goals(-2)
-          .build())
-      .build();
-  private final Club fluminenseWithLoss = TestFixtures.FLUMINENSE.toBuilder()
-      .stats(TestFixtures.FLUMINENSE.nonNullStats()
-          .newWithLoss()
-          .toBuilder()
-          .goals(-1)
-          .build())
-      .build();
+  private final Club gremioWithWin = TestFixtures.GREMIO.newWithWin(2);
+  private final Club flamengoWithWin = TestFixtures.FLAMENGO.newWithWin(1);
+  private final Club internacionalWithLoss = TestFixtures.INTERNACIONAL.newWithLoss(-2);
+  private final Club fluminenseWithLoss = TestFixtures.FLUMINENSE.newWithLoss(-1);
   private LeagueDetails leagueDetails;
 
   @Inject ElifutDataStore persistenceService;
